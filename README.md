@@ -16,4 +16,6 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 | 2 | [Lab 02: Access-Layer Security](https://github.com/gusRod36/TNARC_Access_Hardening) | In progress | |
 
 ## Design
-- 
+- [Design Doc](./docs/Design.md)
+- [Network Addresses](./docs/Network_Addresses.md)
+
