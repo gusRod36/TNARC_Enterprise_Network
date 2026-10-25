@@ -100,40 +100,45 @@
 | g1/0/1 | -> | Core-1 | g1/0/10 | 10.0.255.32/30 | 10.0.255.34 |
 | g1/0/2 | -> | Core-2 | g1/0/10 | 10.0.255.36/30 | 10.0.255.38 |
 | g1/0/3 | -> | DHCP-Server | fa0 | 10.0.200.0/24 | 10.0.200.1 |
+| g1/0/4 | -> | AAA-Server | fa0 | 10.0.201.0/24 | 10.0.201.1 |
 | loopback0 | | | | 10.0.254.7/32 | 10.0.254.7 |
 
 ## A-Access-SW1
-| Port | | Device | Port | Trunk/Access | VLAN |
-|------|-|--------|------|--------------|------|
+| Port | | Device | Port | Trunk/Access | VLAN | Subnet |
+|------|-|--------|------|--------------|------|--------|
 | g0/1 | -> | A-Distribution-1 | g1/0/3 | Trunk | 10,20,777 |
 | g0/2 | -> | A-Distribution-2 | g1/0/4 | Trunk | 10,20,777 |
 | f0/1-2 | -> | Finance-A | | Access | 10 |
 | f0/3-4 | -> | Engineering-A | | Access | 10 |
 | f0/5-24 | -> | Unused | | Access | 999 |
+| | | Management_VLAN | | SVI | 100 | 10.0.100.11 |
 
 ## A-Access-SW2
-| Port | | Device | Port | Trunk/Access | VLAN |
-|------|-|--------|------|--------------|------|
+| Port | | Device | Port | Trunk/Access | VLAN | Subnet |
+|------|-|--------|------|--------------|------|--------|
 | g0/1 | -> | A-Distribution-2 | g1/0/3 | Trunk | 30,99,777 |
 | g0/2 | -> | A-Distribution-1 | g1/0/4 | Trunk | 30,99,777 |
 | f0/1-2 | -> | HR-A | | Access | 30 |
 | f0/3-4 | -> | Management-A | | Access | 99 |
 | f0/5-24 | -> | Unused | | Access | 999 |
+| | | Management_VLAN | | SVI | 100 | 10.0.100.12 |
 
 ## B-Access-SW1
-| Port | | Device | Port | Trunk/Access | VLAN |
-|------|-|--------|------|--------------|------|
+| Port | | Device | Port | Trunk/Access | VLAN | Subnet |
+|------|-|--------|------|--------------|------|--------|
 | g0/1 | -> | B-Distribution-1 | g1/0/3 | Trunk | 110,120,777 |
 | g0/2 | -> | B-Distribution-2 | g1/0/4 | Trunk | 110,120,777 |
 | f0/1-2 | -> | Finance-B | | Access | 110 |
 | f0/3-4 | -> | Engineering-B | | Access | 120 |
 | f0/5-24 | -> | Unused | | Access | 999 |
+| | | Management_VLAN | | SVI | 100 | 10.0.100.76 |
 
 ## B-Access-SW2
-| Port | | Device | Port | Trunk/Access | VLAN |
-|------|-|--------|------|--------------|------|
+| Port | | Device | Port | Trunk/Access | VLAN | Subnet |
+|------|-|--------|------|--------------|------|--------|
 | g0/1 | -> | B-Distribution-2 | g1/0/3 | Trunk | 130,199,777 |
 | g0/2 | -> | B-Distribution-1 | g1/0/4 | Trunk | 130,199,777 |
 | f0/1-2 | -> | HR-B | | Access | 130 |
 | f0/3-4 | -> | Management-B | | Access | 199 |
 | f0/5-24 | -> | Unused | | Access | 999 |
+| | | Management_VLAN | | SVI | 100 | 10.0.100.77 |
