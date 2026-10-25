@@ -4,10 +4,20 @@ no service timestamps log datetime msec
 no service timestamps debug datetime msec
 no service password-encryption
 !
-hostname Switch
+hostname Server-SW1
 !
 !
 no profinet
+enable secret 9 $9$J19FIAftPZf7c3$v/bHRw4JpMY4TxTbnbhmqjWTsu3BrY6JB/RGYzupB1I
+!
+!
+!
+!
+!
+aaa new-model
+!
+aaa authentication login default group tacacs+ local 
+!
 !
 !
 !
@@ -30,6 +40,9 @@ no ipv6 cef
 !
 !
 !
+ip ssh version 2
+ip ssh time-out 60
+ip domain-name TNARC.com
 !
 !
 spanning-tree mode pvst
@@ -61,6 +74,10 @@ interface GigabitEthernet1/0/3
  speed auto
 !
 interface GigabitEthernet1/0/4
+ no switchport
+ ip address 10.0.201.1 255.255.255.0
+ duplex auto
+ speed auto
 !
 interface GigabitEthernet1/0/5
 !
@@ -117,28 +134,47 @@ interface Vlan1
 router ospf 10
  log-adjacency-changes
  passive-interface GigabitEthernet1/0/3
+ passive-interface GigabitEthernet1/0/4
  passive-interface Loopback0
  network 10.0.255.36 0.0.0.3 area 0
  network 10.0.255.32 0.0.0.3 area 0
  network 10.0.254.7 0.0.0.0 area 3
  network 10.0.200.0 0.0.0.255 area 3
+ network 10.0.201.0 0.0.0.255 area 3
 !
 ip classless
 !
 ip flow-export version 9
 !
 !
+ip access-list extended SSH_Management
+ permit tcp 10.0.99.0 0.0.0.255 any eq 22
+ permit tcp 10.0.199.0 0.0.0.255 any eq 22
 !
+banner motd z
+WARNING! Access is restricted and monitored. z
 !
+tacacs-server host 10.0.201.10
+tacacs-server key tacacskey
 !
 !
 !
 line con 0
+ exec-timeout 5 0
+ login authentication default
 !
 line aux 0
 !
 line vty 0 4
- login
+ access-class SSH_Management in
+ exec-timeout 5 0
+ login authentication default
+ transport input ssh
+line vty 5 15
+ access-class SSH_Management in
+ exec-timeout 5 0
+ login authentication default
+ transport input ssh
 !
 !
 !
