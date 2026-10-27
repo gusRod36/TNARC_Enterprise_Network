@@ -1,7 +1,7 @@
 !
 version 15.0
-no service timestamps log datetime msec
-no service timestamps debug datetime msec
+service timestamps log datetime msec
+service timestamps debug datetime msec
 service password-encryption
 !
 hostname B-Access-SW1
@@ -190,7 +190,9 @@ ip default-gateway 10.0.100.65
 !
 banner motd z
 WARNING! Access is restricted and monitored. z
-tacacs-server host 10.0.201.10
+logging trap debugging
+logging 10.0.200.35
+tacacs-server host 10.0.200.20
 tacacs-server key tacacskey
 !
 !
@@ -215,6 +217,7 @@ line vty 5 15
 !
 !
 !
+ntp server 10.0.200.35
 !
 end
 

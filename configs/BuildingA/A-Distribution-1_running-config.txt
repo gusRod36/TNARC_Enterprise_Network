@@ -1,7 +1,7 @@
 !
 version 16.3.2
-no service timestamps log datetime msec
-no service timestamps debug datetime msec
+service timestamps log datetime msec
+service timestamps debug datetime msec
 service password-encryption
 !
 hostname A-Distribution-1
@@ -45,6 +45,7 @@ username localadmin secret 5 $1$mERr$Jd.F1u8qRyWXFszq5SldR1
 ip ssh version 2
 ip ssh time-out 60
 ip domain-name TNARC.com
+ip name-server 10.0.200.35
 !
 !
 spanning-tree mode pvst
@@ -274,11 +275,13 @@ ip access-list extended SSH_Management
 banner motd z
 WARNING! Access is restricted and monitored. z
 !
-tacacs-server host 10.0.201.10
+tacacs-server host 10.0.200.20
 tacacs-server key tacacskey
 !
 !
 !
+logging trap debugging
+logging 10.0.200.35
 line con 0
  exec-timeout 5 0
  login authentication default
@@ -298,6 +301,8 @@ line vty 5 15
 !
 !
 !
+ntp server 10.0.200.35
+ntp update-calendar
 !
 end
 

@@ -8,6 +8,7 @@ HQ: Building A, Building B, Server room. Planned: Branch 1 (new), Branch 2 (acqu
 - Security baseline applied before any new site goes live.
 - Every device gets the security baseline before it joins the network.
 - Device management is reachable only from the Management VLANs.
+- Shared services (logging, time, DNS, backups) are in place before any new site connects.
 
 ## Architecture
 
@@ -35,8 +36,9 @@ OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 | 120 | Engineering-B | B | 10.0.120.0/24 | 10.0.120.1 |
 | 130 | HR-B | B | 10.0.130.0/24 | 10.0.130.1 |
 | 199 | Management-B | B | 10.0.199.0/24 | 10.0.199.1 |
-|  | DHCP | Server Block | 10.0.200.0/24 | 10.0.200.1 |
-|  | AAA | Server Block | 10.0.201.0/24 | 10.0.201.1 |
+|  | DHCP | Server Block | 10.0.200.0/28 | 10.0.200.1 |
+|  | AAA | Server Block | 10.0.200.16/28 | 10.0.200.17 |
+|  | Management-Server | Server Block | 10.0.200.32/28 | 10.0.200.33 |
 | 777 | Native | A and B | | |
 | 999 | Unused | A and B | | |
 
@@ -51,6 +53,12 @@ OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 | TACACS+ for device administration | Full message encryption, separate authorization and accounting | 2 |
 | Local emergency account as AAA fallback | Admins keep access if the AAA server is unreachable | 2 |
 | DHCP information option disabled | Server doesn't use it and the distribution relay drops the packet | 2 |
+| Centralized NTP server | Keeps all devices synchronized for logging | 3 |
+| Syslog trap level debugging | Capture all events, logs and alerts across the network | 3 |
+| Events correlated by Syslog server receive time plus sequence numbers | Server gives one timeline | 3 |
+| DNS records point to loopbacks | Loopbacks stay reachable when a single link fails | 3 |
+| One shared server for Syslog, TFTP, DNS, NTP | Keeps it simple, although it risks all service going down at once | 3 |
+| Bootstrap config kept for every device type | A wiped device can't reach TFTP without basic reachability | 3 |
 
 ## Security baseline (all access switches)
 | Area | Standard |
@@ -68,6 +76,10 @@ OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 | Sessions | exec-timeout 5 minutes, SSH retries 3, SSH timeout 60 seconds |
 | Passwords | enable secret, service password-encryption |
 | Banner | Restricted access warning on every login |
+| Logging | logging host 10.0.200.35, trap level debugging, sequence-numbers, service timestamps log datetime msec | 
+| Time | ntp server 10.0.200.35 | 
+| Backups | Running-config copied to TFTP after every change |
+| DNS | FQDN for queries on hosts, DNS server IP handed out by DHCP to clients |
 
 
 *Built by Gustavo Rodriguez - [LinkedIn](https://www.linkedin.com/in/gustavo-rodriguez-200aab423/)*
