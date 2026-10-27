@@ -1,7 +1,7 @@
 !
 version 15.0
-no service timestamps log datetime msec
-no service timestamps debug datetime msec
+service timestamps log datetime msec
+service timestamps debug datetime msec
 service password-encryption
 !
 hostname A-Access-SW1
@@ -170,14 +170,19 @@ ip default-gateway 10.0.100.1
 !
 banner motd z
 WARNING! Access is restricted and monitored. z
-tacacs-server host 10.0.201.10
+logging trap debugging
+logging 10.0.200.35
+tacacs-server host 10.0.200.20
 tacacs-server key tacacskey
 !
 !
+snmp-server community SNMP-HOSTS RO
 !
 ip access-list extended SSH_Management
  permit tcp 10.0.99.0 0.0.0.255 any eq 22
  permit tcp 10.0.199.0 0.0.0.255 any eq 22
+ip access-list standard SNMP-HOSTS
+ permit host 10.0.99.8
 line con 0
  login authentication default
  exec-timeout 5 0
@@ -195,6 +200,7 @@ line vty 5 15
 !
 !
 !
+ntp server 10.0.200.35
 !
 end
 
