@@ -2,7 +2,7 @@
 
 The complete network for TNARC Financial (Totally Not A Real Company), built in Cisco Packet Tracer 8.2.2 one lab at a time. Each stage adds a capability, each lab explains that stage in depth.
 
-<img src="./images/TNARC_Enterprise_Network.JPG" alt="TNARC Topology" Width="800">
+<img src="./images/TNARC_Enterprise_Network.JPG" alt="TNARC Topology">
 
 ## Current capabilities
 - Redundant three-tier HQ campus: two building and a server room joined by a routed core.
