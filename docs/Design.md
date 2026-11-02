@@ -9,6 +9,8 @@ HQ: Building A, Building B, Server room. Planned: Branch 1 (new), Branch 2 (acqu
 - Every device gets the security baseline before it joins the network.
 - Device management is reachable only from the Management VLANs.
 - Shared services (logging, time, DNS, backups) are in place before any new site connects.
+- Deny by default at the perimeter, every allowed flow is documented and tested.
+- No edge or DMZ device starts connections into the inside network, except narrow management rules.
 
 ## Architecture
 
@@ -20,6 +22,7 @@ HQ: Building A, Building B, Server room. Planned: Branch 1 (new), Branch 2 (acqu
 | Access | A-Access-SW1, A-Access-SW2, B-Access-SW1, B-Access-SW2 | 2960 | User ports |
 | Server block | Server-SW1 | 3650 | Connects DHCP server and future servers |
 | End devices | 2 PCs per VLAN, DHCP-Server | | Testing and Services |
+| Edge | Edge-RTR, ASA-1 | 2911, ASA 5506-X | NAT/PAT, Security |
 
 OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 
@@ -36,9 +39,13 @@ OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 | 120 | Engineering-B | B | 10.0.120.0/24 | 10.0.120.1 |
 | 130 | HR-B | B | 10.0.130.0/24 | 10.0.130.1 |
 | 199 | Management-B | B | 10.0.199.0/24 | 10.0.199.1 |
+| 210 | DMZ | DMZ | 10.0.210.0/24 | 10.0.210.1 |
 |  | DHCP | Server Block | 10.0.200.0/28 | 10.0.200.1 |
 |  | AAA | Server Block | 10.0.200.16/28 | 10.0.200.17 |
 |  | Management-Server | Server Block | 10.0.200.32/28 | 10.0.200.33 |
+|  | PAT | Edge | 203.0.113.0/28 | | 
+|  | Outside/ISP | Edge | 198.51.100.0/30, 198.51.100.4/30 | 198.51.100.1, 198.51.100.5 |
+|  | ASA-1 to Edge-RTR | Edge | 10.0.250.0/30 | 10.0.250.1 | 
 | 777 | Native | A and B | | |
 | 999 | Unused | A and B | | |
 
@@ -59,6 +66,12 @@ OSPF areas: 0 = Backbone - 1 = Building A - 2 = Building B - 3 = Server room
 | DNS records point to loopbacks | Loopbacks stay reachable when a single link fails | 3 |
 | One shared server for Syslog, TFTP, DNS, NTP | Keeps it simple, although it risks all service going down at once | 3 |
 | Bootstrap config kept for every device type | A wiped device can't reach TFTP without basic reachability | 3 |
+| NAT on Edge-RTR instead of ASA | CPT's ASA only supports PAT to its local interface address, which is a private adress. Edge-RTR handles a PAT pool and static NAT addresses so the ASA only sees private addresses | 4 |
+| TNARC owns public address block 203.0.113.0/28, advertised to both ISPs over BGP | Internal Users are translated to TNARC's own addresses, so replies return through either ISP and failover works. | 4 |
+| Public block split: PAT pool = 203.0.113.1-10, NAT static 203.0.113.11 DNS-Server, NAT Static 203.0.113.12 Web-Server | The PAT pool can never take a server's public IP address, spare addresses leave room for new services | 4 |
+| Edge-RTR reaches AAA, Syslog, NTP and TFTP through host to host only rules | Edge-RTR sits outside the firewall but still needs central login, logging and backups. Each rule allows one source, one destination and one port, nothing else not even ICMP | 4 |
+| ASA uses individual local accounts | CPT's ASA doesn't support AAA-server , so no centralized authentication was possible. | 4 |
+| DMZ-SW uses individual local accounts, not TACACS+ | A DMZ to AAA-server would let a compromized DMZ device guess credentials or attack the server that controls access to the whole network. Local accounts keep the DMZ fully isolated while logins stay individual | 4 |
 
 ## Security baseline (all access switches)
 | Area | Standard |

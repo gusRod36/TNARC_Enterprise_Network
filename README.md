@@ -14,6 +14,8 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 - Centralized NTP with timezone set to CST (UTC-6)
 - TFTP config backups with a tested restore
 - Internal DNS handed out to all clients through DHCP
+- Internet edge: dual ISPs over eBGP with TNARC's own public block, PAT and static NAT, and automatic failover on ISPs.
+- Perimeter firewall, ASA with inside, DMZ, and outside zones, deny by default rules with logging and a DMZ hosting public web and DNS.
 
 ## Build stages
 | Stage | Lab | What it added | Tag |
@@ -21,7 +23,7 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 | 1 | [Lab 01: Three-Tier Campus](https://github.com/gusRod36/TNARC_HQ_Lab_01) | Campus, HRSP, OSPF, Central DHCP | v1-campus |
 | 2 | [Lab 02: Access-Layer Security](https://github.com/gusRod36/TNARC_Access_Hardening) | SSH and AAA, DHCP Snooping, DAI, Port-security, BPDU Guard  | v2-accessHardening |
 | 3 | [Lab 03: Network Management and DNS](https://github.com/gusRod36/TNARC_Network-Management_Lab03) | DNS, Syslog, TFTP, NTP | v3-network_management | 
-| 4 | [Lab 04: Internet Edge and Firewall](https://github.com/gusRod36/Internet_Edge_and_Firewall_Lab04) | In progress... | v4-internetEdge_firewall |
+| 4 | [Lab 04: Internet Edge and Firewall](https://github.com/gusRod36/Internet_Edge_and_Firewall_Lab04) | Dual-ISP eBGP, NAT/PAT, ASA Perimeter, DMZ | v4-internet_and_firewall |
 
 ## Design
 - [Design Doc](./docs/Design.md)
