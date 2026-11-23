@@ -32,7 +32,7 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 | 3 | [Lab 03: Network Management and DNS](https://github.com/gusRod36/TNARC_Network-Management_Lab03) | DNS, Syslog, TFTP, NTP | v3-network_management | 
 | 4 | [Lab 04: Internet Edge and Firewall](https://github.com/gusRod36/Internet_Edge_and_Firewall_Lab04) | Dual-ISP eBGP, NAT/PAT, ASA Perimeter, DMZ | v4-internet_and_firewall |
 | 5 | [Lab 05: Branch Expansion](https://github.com/gusRod36/TNARC_Branch_Expansion_Lab05) | WAN, GRE over IPsec, OSPF/EIGRP redistribution, branch firewalls, direct internet access, centralized services  | v5-branch_expansion | 
-| 6 | [Lab 06: Upgrading to SD-WAN and Wi-FI](https://github.com/gusRod36/TNARCH_SD-WAN_and_Wi-Fi) | Plannes... |
+| 6 | [Lab 06: Upgrading to SD-WAN and Wi-FI](https://github.com/gusRod36/TNARC_SD-WAN_and_Wi-Fi) | Planned... |
 
 ## Design
 - [Design Doc](./docs/Design.md)
