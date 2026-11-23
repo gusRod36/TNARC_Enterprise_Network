@@ -2,7 +2,8 @@
 
 The complete network for TNARC Financial (Totally Not A Real Company), built in Cisco Packet Tracer 8.2.2 one lab at a time. Each stage adds a capability, each lab explains that stage in depth.
 
-<img src="./images/TNARC_Enterprise_Network.JPG" alt="TNARC Topology">
+<img src="./images/TNARC_Branches_Topology_top.JPG" alt="TNARC Topology Top">
+<img src="./images/TNARC_Branches_Topology_bottom.JPG" alt="TNARC Topology Bottom">
 
 ## Current capabilities
 - Redundant three-tier HQ campus: two building and a server room joined by a routed core.
@@ -16,6 +17,12 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 - Internal DNS handed out to all clients through DHCP
 - Internet edge: dual ISPs over eBGP with TNARC's own public block, PAT and static NAT, and automatic failover on ISPs.
 - Perimeter firewall, ASA with inside, DMZ, and outside zones, deny by default rules with logging and a DMZ hosting public web and DNS.
+- Site-to-site VPN: each branch joins HQ through an encrypted GRE over IPsec tunnel. (IKEv1, AES-256, Unique keys per branch)
+- Multi-protocol routing: OSPF at branch 1 and EIGRP at branch 2 redistributed at a single point on HQ-Edge-RTR.
+- Direct internet access at each branch through their own ISP, traffic is translated to TNARC's own /28 addresses. Company traffic always uses tunnels.
+- Fail closed set up so if a tunnel drops all company traffic is denied at the ISP interface instead of leaving unencrypted.
+- Firewall at each branch, HQ ASA traffic gets only the services needed (DHCP, DNS, AAA, syslog, NTPm TFTP, SSH from management).
+- Centralized services: All branch devices get DHCP, AAA, syslog and NTP from HQ and meet the security baselines previously established.
 
 ## Build stages
 | Stage | Lab | What it added | Tag |
@@ -24,7 +31,8 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 | 2 | [Lab 02: Access-Layer Security](https://github.com/gusRod36/TNARC_Access_Hardening) | SSH and AAA, DHCP Snooping, DAI, Port-security, BPDU Guard  | v2-accessHardening |
 | 3 | [Lab 03: Network Management and DNS](https://github.com/gusRod36/TNARC_Network-Management_Lab03) | DNS, Syslog, TFTP, NTP | v3-network_management | 
 | 4 | [Lab 04: Internet Edge and Firewall](https://github.com/gusRod36/Internet_Edge_and_Firewall_Lab04) | Dual-ISP eBGP, NAT/PAT, ASA Perimeter, DMZ | v4-internet_and_firewall |
-| 5 | [Lab 05: Branch Expansion](https://github.com/gusRod36/TNARC_Branch_Expansion_Lab05) | Planned... | v5-branch_expansion | 
+| 5 | [Lab 05: Branch Expansion](https://github.com/gusRod36/TNARC_Branch_Expansion_Lab05) | WAN, GRE over IPsec, OSPF/EIGRP redistribution, branch firewalls, direct internet access, centralized services  | v5-branch_expansion | 
+| 6 | [Lab 06: Upgrading to SD-WAN and Wi-FI](https://github.com/gusRod36/TNARCH_SD-WAN_and_Wi-Fi) | Plannes... |
 
 ## Design
 - [Design Doc](./docs/Design.md)
@@ -39,5 +47,7 @@ The complete network for TNARC Financial (Totally Not A Real Company), built in 
 6. Backups are run by hand, production would schedule them automatically.
 7. Syslog, TFTP and DNS share one server, a single point of failure
 8. NetFlow is deferred until there's a router at the internet edge. 
+9. No branch ISP redundancy, the ISP routers ran out of routing ports in CPT. A back tunnel design is documented.
+10. Hub and spoke only, branch to branch traffic crosses HQ.
 
 *Built by Gustavo Rodriguez - [LinkedIn](https://www.linkedin.com/in/gustavo-rodriguez-200aab423/)*
